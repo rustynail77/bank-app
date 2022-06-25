@@ -23,8 +23,13 @@ const SearchBar = () => {
             }
             postsFilter.city = tempArr;
         }
-        if (e.target.credit_cards && e.target.credit_cards.value!=='') 
-            postsFilter.numCreditCards = e.target.credit_cards.value;
+        if (e.target.credit_cards_from && e.target.credit_cards_to) {
+            postsFilter.numCreditCards = {
+                $gte: e.target.credit_cards_from.value,
+                $lte: e.target.credit_cards_to.value,
+            }
+        }
+            
         
         if (e.target.balance_from.value && e.target.balance_to.value) {
             postsFilter.balance = {
@@ -54,7 +59,9 @@ const SearchBar = () => {
                 Balance between <input type='text' name='balance_from' />
                 and <input type='text' name='balance_to' />
                
-                Number of credit cards <input type='number' name='credit_cards' />
+                # of credit cards from <input type='number' name='credit_cards_from' />
+                to <input type='number' name='credit_cards_to' />
+
                 <br/>
                 Has a mortgage?
                 <select name='has_mortgage' defaultValue=''>
