@@ -9,7 +9,7 @@ const SearchBar = () => {
     const {setFilteredPosts, cities} = useContext(AppContext);
     
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         const postsFilter = {};
         if (e.target.has_mortgage.value) 
             postsFilter.haveMortgage = { 
@@ -56,6 +56,18 @@ const SearchBar = () => {
         setFilteredPosts(filtered);
     }
     
+    const clearFilter = async () => {
+        let myForm = document.forms[0];
+        myForm['balance_from'].value = '';
+        myForm['balance_to'].value = '';
+        myForm['credit_cards_from'].value = '';
+        myForm['credit_cards_to'].value = '';
+        myForm['has_mortgage'].value = '';
+        myForm['cities'].value = '';
+        const comboFilter = {postsFilter:{},balanceFilter:{}};
+        const filtered = await dispatch(filterPosts(comboFilter));
+        setFilteredPosts(filtered);
+    }
 
     return (
         <>
@@ -87,6 +99,7 @@ const SearchBar = () => {
                     }
                 </select>
                 <button type='submit' value='submit'>Submit</button>
+                <button onClick={clearFilter}>Clear Filter</button>
             </form>
         </>
     )

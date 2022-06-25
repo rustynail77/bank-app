@@ -12,10 +12,8 @@ export const getPosts = () => async (dispatch) => {
   }
 };
 
-/* added */
 export const filterPosts = (filter) => async (dispatch) => {
   try {
-    console.log('in actions:', filter);
     const {data} = await api.fetchFilteredPosts(filter)
     dispatch({ type: FETCH_FILTERED, payload: data });
     
@@ -23,7 +21,7 @@ export const filterPosts = (filter) => async (dispatch) => {
     console.log(error.message);
   }
 };
-/* to here */
+
 
 export const createPost = (post) => async (dispatch) => {
   try {

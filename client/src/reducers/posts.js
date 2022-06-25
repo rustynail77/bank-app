@@ -5,11 +5,8 @@ export default (posts = [], action) => {
     case FETCH_ALL:
       return action.payload;
 
-/* added */
     case FETCH_FILTERED:
-      console.log('in reducer:', action.payload.length);
       return action.payload;
-/* to here */
 
     case LIKE:
       return posts.map((post) => (post._id === action.payload._id ? action.payload : post));
