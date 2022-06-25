@@ -1,9 +1,16 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE, LIKE } from '../constants/actionTypes';
+import { FETCH_ALL, FETCH_FILTERED, CREATE, UPDATE, DELETE, LIKE } from '../constants/actionTypes';
 
 export default (posts = [], action) => {
   switch (action.type) {
     case FETCH_ALL:
       return action.payload;
+
+/* added */
+    case FETCH_FILTERED:
+      console.log('in reducer:', action.payload.length);
+      return action.payload;
+/* to here */
+
     case LIKE:
       return posts.map((post) => (post._id === action.payload._id ? action.payload : post));
     case CREATE:

@@ -1,4 +1,4 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE, LIKE } from '../constants/actionTypes';
+import { FETCH_ALL, FETCH_FILTERED, CREATE, UPDATE, DELETE, LIKE } from '../constants/actionTypes';
 
 import * as api from '../api/index.js';
 
@@ -11,6 +11,19 @@ export const getPosts = () => async (dispatch) => {
     console.log(error.message);
   }
 };
+
+/* added */
+export const filterPosts = (filter) => async (dispatch) => {
+  try {
+    console.log('in actions:', filter);
+    const {data} = await api.fetchFilteredPosts(filter)
+    dispatch({ type: FETCH_FILTERED, payload: data });
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+/* to here */
 
 export const createPost = (post) => async (dispatch) => {
   try {
