@@ -15,13 +15,29 @@ export const getPosts = async (req, res) => {
 }
 
 export const getFilteredPosts = async (req, res) => { 
-    console.log('in getFiltered controller. body is:', req.body);
-    const filterObj = req.body;
-    console.log('filterObj:',filterObj);
+    
+    const {postsFilter} = req.body;
+    const {balanceFilter} = req.body;
     try {
-        const postMessages = await PostMessage.find(filterObj);
-        console.log('postMessages.length:',postMessages.length);
-        res.status(200).json(postMessages);
+        const postMessages = await PostMessage.find(postsFilter);
+        if (Object.keys(balanceFilter).length===0) {
+            res.status(200).json(postMessages)
+        } else {
+            let balancedPosts = [];
+            if (balanceFilter.to && balanceFilter.from) {
+                balancedPosts = postMessages.filter(post=>
+                    Number(post.balance)<=balanceFilter.to
+                    && Number (post.balance) >=balanceFilter.from
+                    );
+            } else if (balanceFilter.to) {
+                balancedPosts = postMessages.filter(post=>
+                    Number(post.balance)<=balanceFilter.to);
+            } else {
+                balancedPosts = postMessages.filter(post=>
+                    Number(post.balance)>=balanceFilter.from);
+            }
+            res.status(200).json(balancedPosts);
+        }
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

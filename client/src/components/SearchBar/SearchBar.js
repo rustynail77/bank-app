@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import { useDispatch } from 'react-redux';
 import {AppContext} from '../../App';
 import { filterPosts } from '../../actions/posts';
-// import posts from '../../reducers/posts';
 
 const SearchBar = () => {
 
@@ -23,31 +22,37 @@ const SearchBar = () => {
             }
             postsFilter.city = tempArr;
         }
-        if (e.target.credit_cards_from && e.target.credit_cards_to) {
+        if ((e.target.credit_cards_from&&e.target.credit_cards_from.value!=='') 
+            && (e.target.credit_cards_to)&&(e.target.credit_cards_to.value!=='')) {
             postsFilter.numCreditCards = {
                 $gte: e.target.credit_cards_from.value,
                 $lte: e.target.credit_cards_to.value,
             }
+        } else if (e.target.credit_cards_from.value 
+                    && e.target.credit_cards_from.value!==''
+                    && !e.target.credit_cards_to.value) {
+                        postsFilter.balance = {
+                            $gte: e.target.balance_from.value
+            }
+        } else if (!e.target.balance_from.value 
+                    && e.target.balance_to.value
+                    && e.target.credit_cards_to.value!=='') {
+                        postsFilter.balance = {
+                            $lte: e.target.balance_to.value
+                        }
         }
             
+        const balanceFilter = {};
+        if (e.target.balance_from.value && e.target.balance_from.value!=='') 
+            balanceFilter.from = e.target.balance_from.value;
         
-        if (e.target.balance_from.value && e.target.balance_to.value) {
-            postsFilter.balance = {
-                $gte: e.target.balance_from.value,
-                $lte: e.target.balance_to.value
-            }
-        } else if (e.target.balance_from.value && !e.target.balance_to.value) {
-            postsFilter.balance = {
-                $gte: e.target.balance_from.value
-            }
-        } else if (!e.target.balance_from.value && e.target.balance_to.value) {
-            postsFilter.balance = {
-                $lte: e.target.balance_to.value
-            }
-        }
+        if (e.target.balance_to.value && e.target.balance_to.value!=='') 
+            balanceFilter.to =  e.target.balance_to.value;
+            
+        
+        const comboFilter = {postsFilter, balanceFilter};
    
-        console.log('postsFilter:',postsFilter);
-        const filtered = await dispatch(filterPosts(postsFilter));
+        const filtered = await dispatch(filterPosts(comboFilter));
         setFilteredPosts(filtered);
     }
     
